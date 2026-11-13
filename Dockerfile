@@ -6,5 +6,5 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 RUN python3 -m venv /opt/venv && /opt/venv/bin/pip install --no-cache-dir python-telegram-bot==21.6
 WORKDIR /work
-COPY bot.py /opt/bot.py
+COPY kali.bot.py /opt/bot.py
 CMD ["/opt/venv/bin/python", "/opt/bot.py"]
