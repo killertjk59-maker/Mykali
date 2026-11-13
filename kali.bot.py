@@ -45,7 +45,8 @@ async def shell(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     cwd = ctx.user_data.get("cwd", "/work")
 
     if cmd == "cd" or cmd.startswith("cd "):
-        target = os.path.abspath(os.path.join(cwd, os.path.expanduser(cmd[2:].strip() or "~")))
+        target = os.path.abspath(
+            os.path.join(cwd, os.path.expanduser(cmd[2:].strip() or "~")))
         if os.path.isdir(target):
             ctx.user_data["cwd"] = target
             await update.message.reply_text(target)
@@ -57,6 +58,7 @@ async def shell(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Farmoni digar kor mekunad. /cancel")
         return
 
+    os.makedirs(cwd, exist_ok=True)
     p = await asyncio.create_subprocess_shell(
         cmd, cwd=cwd, stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.STDOUT, start_new_session=True)
@@ -78,6 +80,7 @@ async def shell(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
 
 def main():
+    asyncio.set_event_loop(asyncio.new_event_loop())
     app = Application.builder().token(TOKEN).concurrent_updates(True).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("id", myid))
